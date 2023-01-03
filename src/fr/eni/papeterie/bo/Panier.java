@@ -1,5 +1,6 @@
 package fr.eni.papeterie.bo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,11 +12,13 @@ import java.util.List;
 public class Panier {
 
 	private float montant;
+	private List<Ligne> lignesPanier;
 
 	/**
 	 * Constructeur sans paramètres
 	 */
 	public Panier() {
+		lignesPanier = new ArrayList<Ligne>();
 	}
 
 	/**
@@ -33,7 +36,7 @@ public class Panier {
 	 * @return la ligne de la liste d'achat
 	 */
 	public Ligne getLigne(int index) {
-		return //TODO;
+		return lignesPanier.get(index);
 	}
 
 	/**
@@ -41,7 +44,7 @@ public class Panier {
 	 * @return les lignes du panier d'achat
 	 */
 	public List<Ligne> getLignesPanier() {
-		return //TODO;
+		return lignesPanier;
 	}
 
 	/**
@@ -51,7 +54,9 @@ public class Panier {
 	 * @param qte
 	 */
 	public void addLigne(Article article, int qte) {
-		// TODO
+		Ligne nouvelleLigne = new Ligne(article, qte);
+		lignesPanier.add(nouvelleLigne);
+		montant = calcul(lignesPanier);
 	}
 
 	/**
@@ -60,8 +65,10 @@ public class Panier {
 	 * @param index  : numéro de ligne de l'article à modifier
 	 * @param newQte : nouvelle quantité
 	 */
-	public void updateligne(int index, int newQte) {
-		// TODO
+	public void updateLigne(int index, int newQte) {
+//		this.getLigne(index).setQte(newQte);
+		lignesPanier.get(index).setQte(newQte);
+		montant = calcul(lignesPanier);
 	}
 
 	/**
@@ -70,11 +77,30 @@ public class Panier {
 	 * @param index : numéro de ligne de l'article à supprimer
 	 */
 	public void removeLigne(int index) {
-		// TODO
+		lignesPanier.remove(index);
+		montant = calcul(lignesPanier);
 	}
 
 	@Override
 	public String toString() {
-		return //TODO
+		StringBuilder listeAchats = new StringBuilder();
+		for (Ligne ligne : lignesPanier) {
+			if (ligne != null) {
+				listeAchats.append(String.format("ligne %d :     %s%n", lignesPanier.indexOf(ligne), ligne.toString()));
+			} else
+				break;
+		}
+		return String.format("Panier :%n%n%s%nValeur du panier : %.01f", listeAchats, getMontant());
+	}
+
+	private float calcul(List<Ligne> lignesPanier) {
+		float resultat = 0;
+		for (Ligne ligne : lignesPanier) {
+			if (ligne != null) {
+				resultat += ligne.getPrix();
+			} else
+				break;
+		}
+		return resultat;
 	}
 }

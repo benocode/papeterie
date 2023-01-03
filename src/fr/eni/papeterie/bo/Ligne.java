@@ -6,10 +6,10 @@ package fr.eni.papeterie.bo;
  * @author benocode
  * @date 02/01/2023
  */
-public class Ligne extends Panier {
+public class Ligne {
 
-	private int qte;
-	private Article article;
+	protected int qte;
+	protected Article article;
 	private float prix;
 
 	/**
@@ -18,10 +18,12 @@ public class Ligne extends Panier {
 	 * @param article
 	 * @param qte
 	 */
-	public void Ligne(Article article, int qte) {
-		this.article = article;
-		this.qte = qte;
-		this.prix = qte * article; // TODO
+	public Ligne(Article article, int qte) {
+//		this.article = article;
+//		this.qte = qte;
+		setArticle(article);
+		setQte(qte);
+		this.prix = qte * article.getPrixUnitaire();
 	}
 
 	/**
@@ -40,6 +42,7 @@ public class Ligne extends Panier {
 	 */
 	public void setQte(int qte) {
 		this.qte = qte;
+		this.prix = qte * article.getPrixUnitaire();
 	}
 
 	/**
@@ -58,6 +61,7 @@ public class Ligne extends Panier {
 	 */
 	public void setArticle(Article article) {
 		this.article = article;
+		this.prix = qte * article.getPrixUnitaire();
 	}
 
 	/**
@@ -72,7 +76,8 @@ public class Ligne extends Panier {
 
 	@Override
 	public String toString() {
-		return //TODO
+		return String.format("Ligne [ qte=%d, prix=%.01f, article=%s]", qte, prix,
+				article.toString() != null ? article.toString() : "pas d'article");
 	}
 
 }

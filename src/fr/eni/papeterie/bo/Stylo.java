@@ -20,7 +20,7 @@ public class Stylo extends Article {
 	 * @param prixUnitaire
 	 * @param qteStock
 	 */
-	public Stylo(Integer idArticle, String reference, String marque, String designation, float prixUnitaire,
+	public Stylo(Integer idArticle, String marque, String reference, String designation, float prixUnitaire,
 			int qteStock) {
 		super(idArticle, reference, marque, designation, prixUnitaire, qteStock);
 	}
@@ -36,7 +36,7 @@ public class Stylo extends Article {
 	 * @param qteStock
 	 * @param couleur
 	 */
-	public Stylo(Integer idArticle, String reference, String marque, String designation, float prixUnitaire,
+	public Stylo(Integer idArticle, String marque, String reference, String designation, float prixUnitaire,
 			int qteStock, String couleur) {
 		super(idArticle, reference, marque, designation, prixUnitaire, qteStock);
 		this.couleur = couleur;
@@ -78,7 +78,7 @@ public class Stylo extends Article {
 
 	@Override
 	public String toString() {
-		return //TODO
+		return String.format("%sStylo [Couleur=%s]", super.toString(), couleur);
 	}
 
 }

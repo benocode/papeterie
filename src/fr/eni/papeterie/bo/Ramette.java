@@ -36,7 +36,7 @@ public class Ramette extends Article {
 	 * @param qteStock
 	 * @param grammage
 	 */
-	public Ramette(Integer idArticle, String reference, String marque, String designation, float prixUnitaire,
+	public Ramette(Integer idArticle, String marque, String reference, String designation, float prixUnitaire,
 			int qteStock, int grammage) {
 		super(idArticle, reference, marque, designation, prixUnitaire, qteStock);
 		this.grammage = grammage;
@@ -52,7 +52,7 @@ public class Ramette extends Article {
 	 * @param prixUnitaire
 	 * @param qteStock
 	 */
-	public Ramette(String reference, String marque, String designation, float prixUnitaire, int qteStock,
+	public Ramette(String marque, String reference, String designation, float prixUnitaire, int qteStock,
 			int grammage) {
 		super(reference, marque, designation, prixUnitaire, qteStock);
 		this.grammage = grammage;
@@ -78,7 +78,7 @@ public class Ramette extends Article {
 
 	@Override
 	public String toString() {
-		return //TODO
+		return String.format("%sRamette [grammage=%d]", super.toString(), grammage);
 	}
 
 }

@@ -162,7 +162,9 @@ public abstract class Article {
 
 	@Override
 	public String toString() {
-		return //TODO
+		return String.format(
+				"Article [idArticle=%s, reference=%s, marque=%s, designation=%s,%nprixUnitaire=%.01f, qteStock=%d] ",
+				idArticle, reference, marque, designation, prixUnitaire, qteStock);
 	}
 
 }
