@@ -1,4 +1,4 @@
-package fr.eni.papeterie.dal.jdbc;
+package fr.eni.papeterie.dal;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,7 +13,6 @@ import java.util.List;
 import fr.eni.papeterie.bo.Article;
 import fr.eni.papeterie.bo.Ramette;
 import fr.eni.papeterie.bo.Stylo;
-import fr.eni.papeterie.dal.DALException;
 
 /**
  * Classe abstraite pour effectuer les requêtes SQL avec le SGBD
@@ -21,7 +20,7 @@ import fr.eni.papeterie.dal.DALException;
  * @author benocode
  * @date 04/01/2023
  */
-public abstract class ArticleDAOJdbcImpl {
+public class ArticleDAOJdbcImpl {
 
 	private static final String TYPE_STYLO = "STYLO";
 	private static final String TYPE_RAMETTE = "RAMETTE";
@@ -42,8 +41,10 @@ public abstract class ArticleDAOJdbcImpl {
 	 */
 	public Connection getConnection() throws SQLException {
 		if (connection == null) {
-			String url = "jdbc:mysql://localhost:3306/papeterie_db";
-			connection = DriverManager.getConnection(url, "root", "root");
+			String url = Settings.getProperties("url");
+			String user = Settings.getProperties("user");
+			String password = Settings.getProperties("password");
+			connection = DriverManager.getConnection(url, user, password);
 		}
 		return connection;
 	}
@@ -58,6 +59,7 @@ public abstract class ArticleDAOJdbcImpl {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+			connection = null;
 		}
 	}
 
@@ -69,9 +71,9 @@ public abstract class ArticleDAOJdbcImpl {
 	 * @throws DALException
 	 */
 	public Article selectById(int id) throws DALException {
-		Connection conn = null;
+		Connection conn;
 		PreparedStatement query = null;
-		ResultSet result = null;
+		ResultSet result;
 		Article article = null;
 		try {
 			conn = getConnection();
@@ -204,6 +206,97 @@ public abstract class ArticleDAOJdbcImpl {
 
 		} catch (SQLException e) {
 			throw new DALException("update article failed - " + article, e);
+		} finally {
+			if (query != null) {
+				try {
+					query.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			closeConnection();
+		}
+	}
+
+	/**
+	 * Méthode pour insérer un article dans la BDD
+	 * 
+	 * @param Article
+	 * @throws DALException
+	 */
+	public void insert(Article article) throws DALException {
+		Connection conn;
+		PreparedStatement query = null;
+
+		try {
+			conn = getConnection();
+
+			/*
+			 * Exécution de la requête
+			 */
+			query = conn.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
+			query.setString(1, article.getReference());
+			query.setString(2, article.getMarque());
+			query.setString(3, article.getDesignation());
+			query.setFloat(4, article.getPrixUnitaire());
+			query.setInt(5, article.getQteStock());
+			if (article instanceof Stylo) {
+				Stylo stylo = (Stylo) article;
+				query.setString(6, "STYLO");
+				query.setNull(7, Types.INTEGER);
+				query.setString(8, stylo.getCouleur());
+			}
+			if (article instanceof Ramette) {
+				Ramette ramette = (Ramette) article;
+				query.setString(6, "RAMETTE");
+				query.setInt(7, ramette.getGrammage());
+				query.setNull(8, Types.VARCHAR);
+			}
+
+			int nbRows = query.executeUpdate();
+			if (nbRows == 1) {
+				ResultSet rs = query.getGeneratedKeys();
+				if (rs.next()) {
+					article.setIdArticle(rs.getInt(1));
+				}
+			}
+
+		} catch (SQLException e) {
+			throw new DALException("insert article failed - " + article, e);
+		} finally {
+			if (query != null) {
+				try {
+					query.close();
+				} catch (SQLException e) {
+					throw new DALException("close failed - ", e);
+				}
+			}
+			closeConnection();
+		}
+	}
+
+	/**
+	 * Méthode pour supprimer un article dans la BDD
+	 * 
+	 * @param idArticle
+	 * @throws DALException
+	 */
+	public void delete(int id) throws DALException {
+		Connection conn;
+		PreparedStatement query = null;
+
+		try {
+			conn = getConnection();
+
+			/*
+			 * Exécution de la requête
+			 */
+			query = conn.prepareStatement(SQL_DELETE);
+			query.setInt(1, id);
+			query.executeUpdate();
+
+		} catch (SQLException e) {
+			throw new DALException("delete article failed - id = " + id, e);
 		} finally {
 			if (query != null) {
 				try {
