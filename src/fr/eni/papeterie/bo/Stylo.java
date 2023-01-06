@@ -14,23 +14,23 @@ public class Stylo extends Article {
 	 * Constructeur avec paramètres de la classe Article
 	 * 
 	 * @param idArticle
-	 * @param reference
 	 * @param marque
+	 * @param reference
 	 * @param designation
 	 * @param prixUnitaire
 	 * @param qteStock
 	 */
 	public Stylo(Integer idArticle, String marque, String reference, String designation, float prixUnitaire,
 			int qteStock) {
-		super(idArticle, reference, marque, designation, prixUnitaire, qteStock);
+		super(idArticle, marque, reference, designation, prixUnitaire, qteStock);
 	}
 
 	/**
 	 * Constructeurs tous paramètres
 	 * 
 	 * @param idArticle
-	 * @param reference
 	 * @param marque
+	 * @param reference
 	 * @param designation
 	 * @param prixUnitaire
 	 * @param qteStock
@@ -38,23 +38,23 @@ public class Stylo extends Article {
 	 */
 	public Stylo(Integer idArticle, String marque, String reference, String designation, float prixUnitaire,
 			int qteStock, String couleur) {
-		super(idArticle, reference, marque, designation, prixUnitaire, qteStock);
+		super(idArticle, marque, reference, designation, prixUnitaire, qteStock);
 		this.couleur = couleur;
 	}
 
 	/**
 	 * Constructeur avec paramètres (sauf id article)
 	 * 
-	 * @param reference
 	 * @param marque
+	 * @param reference
 	 * @param designation
 	 * @param prixUnitaire
 	 * @param qteStock
 	 * @param couleur
 	 */
-	public Stylo(String reference, String marque, String designation, float prixUnitaire, int qteStock,
+	public Stylo(String marque, String reference, String designation, float prixUnitaire, int qteStock,
 			String couleur) {
-		super(reference, marque, designation, prixUnitaire, qteStock);
+		super(marque, reference, designation, prixUnitaire, qteStock);
 		this.couleur = couleur;
 	}
 

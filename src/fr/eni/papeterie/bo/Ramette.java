@@ -14,23 +14,23 @@ public class Ramette extends Article {
 	 * Constructeur avec paramètres de la classe Article
 	 * 
 	 * @param idArticle
-	 * @param reference
 	 * @param marque
+	 * @param reference
 	 * @param designation
 	 * @param prixUnitaire
 	 * @param qteStock
 	 */
-	public Ramette(Integer idArticle, String reference, String marque, String designation, float prixUnitaire,
+	public Ramette(Integer idArticle, String marque, String reference, String designation, float prixUnitaire,
 			int qteStock) {
-		super(idArticle, reference, marque, designation, prixUnitaire, qteStock);
+		super(idArticle, marque, reference, designation, prixUnitaire, qteStock);
 	}
 
 	/**
 	 * Constructeur tous paramètres
 	 * 
 	 * @param idArticle
-	 * @param reference
 	 * @param marque
+	 * @param reference
 	 * @param designation
 	 * @param prixUnitaire
 	 * @param qteStock
@@ -38,7 +38,7 @@ public class Ramette extends Article {
 	 */
 	public Ramette(Integer idArticle, String marque, String reference, String designation, float prixUnitaire,
 			int qteStock, int grammage) {
-		super(idArticle, reference, marque, designation, prixUnitaire, qteStock);
+		super(idArticle, marque, reference, designation, prixUnitaire, qteStock);
 		this.grammage = grammage;
 	}
 
@@ -46,15 +46,15 @@ public class Ramette extends Article {
 	 * Constructeur avec paramètres (sauf id article)
 	 * 
 	 * @param idArticle
-	 * @param reference
 	 * @param marque
+	 * @param reference
 	 * @param designation
 	 * @param prixUnitaire
 	 * @param qteStock
 	 */
 	public Ramette(String marque, String reference, String designation, float prixUnitaire, int qteStock,
 			int grammage) {
-		super(reference, marque, designation, prixUnitaire, qteStock);
+		super(marque, reference, designation, prixUnitaire, qteStock);
 		this.grammage = grammage;
 	}
 

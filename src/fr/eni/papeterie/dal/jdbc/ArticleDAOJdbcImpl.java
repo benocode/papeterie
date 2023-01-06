@@ -1,7 +1,6 @@
-package fr.eni.papeterie.dal;
+package fr.eni.papeterie.dal.jdbc;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,6 +12,8 @@ import java.util.List;
 import fr.eni.papeterie.bo.Article;
 import fr.eni.papeterie.bo.Ramette;
 import fr.eni.papeterie.bo.Stylo;
+import fr.eni.papeterie.dal.ArticleDAO;
+import fr.eni.papeterie.dal.DALException;
 
 /**
  * Classe abstraite pour effectuer les requêtes SQL avec le SGBD
@@ -20,7 +21,7 @@ import fr.eni.papeterie.bo.Stylo;
  * @author benocode
  * @date 04/01/2023
  */
-public class ArticleDAOJdbcImpl {
+public class ArticleDAOJdbcImpl implements ArticleDAO {
 
 	private static final String TYPE_STYLO = "STYLO";
 	private static final String TYPE_RAMETTE = "RAMETTE";
@@ -31,38 +32,6 @@ public class ArticleDAOJdbcImpl {
 	private static final String SQL_INSERT = "insert into articles (reference,marque,designation,prixUnitaire,qteStock,type,grammage,couleur) values (?,?,?,?,?,?,?,?)";
 	private static final String SQL_DELETE = "delete from articles where idArticle=?";
 
-	private Connection connection;
-
-	/**
-	 * Méthode pour ouvrir la connexion avec le SGBD
-	 * 
-	 * @return connection
-	 * @throws SQLException
-	 */
-	public Connection getConnection() throws SQLException {
-		if (connection == null) {
-			String url = Settings.getProperties("url");
-			String user = Settings.getProperties("user");
-			String password = Settings.getProperties("password");
-			connection = DriverManager.getConnection(url, user, password);
-		}
-		return connection;
-	}
-
-	/**
-	 * Méthode pour fermer la connexion avec le SGBD
-	 */
-	public void closeConnection() {
-		if (connection != null) {
-			try {
-				connection.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			connection = null;
-		}
-	}
-
 	/**
 	 * Méthode pour récupérer un article de la BDD avec son numéro id
 	 * 
@@ -70,13 +39,14 @@ public class ArticleDAOJdbcImpl {
 	 * @return article
 	 * @throws DALException
 	 */
+	@Override
 	public Article selectById(int id) throws DALException {
-		Connection conn;
+		Connection conn = null;
 		PreparedStatement query = null;
 		ResultSet result;
 		Article article = null;
 		try {
-			conn = getConnection();
+			conn = JdbcTools.getConnection();
 
 			/*
 			 * Exécution de la requête
@@ -88,7 +58,8 @@ public class ArticleDAOJdbcImpl {
 			/*
 			 * Traitement du résultat
 			 */
-			if (result.next()) { // Vérifie et positionne le curseur sur la ligne de résultat
+			if (result.next()) { // Vérifie si l'id existe bien dans la BDD et positionne le curseur sur la ligne
+									// souhaitée
 				if (TYPE_STYLO.equalsIgnoreCase(result.getString("type").trim())) {
 					article = new Stylo(result.getInt("idArticle"), result.getString("marque"),
 							result.getString("reference"), result.getString("designation"),
@@ -111,7 +82,7 @@ public class ArticleDAOJdbcImpl {
 					e.printStackTrace();
 				}
 			}
-			closeConnection();
+			JdbcTools.closeConnection();
 		}
 		return article;
 	}
@@ -122,13 +93,14 @@ public class ArticleDAOJdbcImpl {
 	 * @return liste des articles
 	 * @throws DALException
 	 */
+	@Override
 	public List<Article> selectAll() throws DALException {
 		Connection conn = null;
 		Statement query = null;
 		ResultSet result = null;
 		List<Article> articles = new ArrayList<>();
 		try {
-			conn = getConnection();
+			conn = JdbcTools.getConnection();
 
 			/*
 			 * Exécution de la requête
@@ -162,7 +134,7 @@ public class ArticleDAOJdbcImpl {
 					e.printStackTrace();
 				}
 			}
-			closeConnection();
+			JdbcTools.closeConnection();
 		}
 		return articles;
 	}
@@ -173,12 +145,13 @@ public class ArticleDAOJdbcImpl {
 	 * @param Article
 	 * @throws DALException
 	 */
+	@Override
 	public void update(Article article) throws DALException {
 		Connection conn = null;
 		PreparedStatement query = null;
 
 		try {
-			conn = getConnection();
+			conn = JdbcTools.getConnection();
 
 			/*
 			 * Exécution de la requête
@@ -214,7 +187,7 @@ public class ArticleDAOJdbcImpl {
 					e.printStackTrace();
 				}
 			}
-			closeConnection();
+			JdbcTools.closeConnection();
 		}
 	}
 
@@ -224,12 +197,13 @@ public class ArticleDAOJdbcImpl {
 	 * @param Article
 	 * @throws DALException
 	 */
+	@Override
 	public void insert(Article article) throws DALException {
 		Connection conn;
 		PreparedStatement query = null;
 
 		try {
-			conn = getConnection();
+			conn = JdbcTools.getConnection();
 
 			/*
 			 * Exécution de la requête
@@ -253,12 +227,10 @@ public class ArticleDAOJdbcImpl {
 				query.setNull(8, Types.VARCHAR);
 			}
 
-			int nbRows = query.executeUpdate();
-			if (nbRows == 1) {
-				ResultSet rs = query.getGeneratedKeys();
-				if (rs.next()) {
-					article.setIdArticle(rs.getInt(1));
-				}
+			query.executeUpdate();
+			ResultSet rs = query.getGeneratedKeys();
+			if (rs.next()) {
+				article.setIdArticle(rs.getInt(1));
 			}
 
 		} catch (SQLException e) {
@@ -271,7 +243,7 @@ public class ArticleDAOJdbcImpl {
 					throw new DALException("close failed - ", e);
 				}
 			}
-			closeConnection();
+			JdbcTools.closeConnection();
 		}
 	}
 
@@ -281,12 +253,13 @@ public class ArticleDAOJdbcImpl {
 	 * @param idArticle
 	 * @throws DALException
 	 */
+	@Override
 	public void delete(int id) throws DALException {
 		Connection conn;
 		PreparedStatement query = null;
 
 		try {
-			conn = getConnection();
+			conn = JdbcTools.getConnection();
 
 			/*
 			 * Exécution de la requête
@@ -305,7 +278,7 @@ public class ArticleDAOJdbcImpl {
 					e.printStackTrace();
 				}
 			}
-			closeConnection();
+			JdbcTools.closeConnection();
 		}
 	}
 }

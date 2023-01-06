@@ -1,10 +1,15 @@
 /**
  * 
  */
-package fr.eni.papeterie.bo;
+package fr.eni.papeterie.app;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import fr.eni.papeterie.bo.Article;
+import fr.eni.papeterie.bo.Panier;
+import fr.eni.papeterie.bo.Ramette;
+import fr.eni.papeterie.bo.Stylo;
 
 
 

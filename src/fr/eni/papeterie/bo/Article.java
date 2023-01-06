@@ -9,8 +9,8 @@ package fr.eni.papeterie.bo;
 public abstract class Article {
 
 	private Integer idArticle;
-	private String reference;
 	private String marque;
+	private String reference;
 	private String designation;
 	private float prixUnitaire;
 	private int qteStock;
@@ -19,17 +19,17 @@ public abstract class Article {
 	 * Constructeurs tous paramètres
 	 * 
 	 * @param idArticle
-	 * @param reference
 	 * @param marque
+	 * @param reference
 	 * @param designation
 	 * @param prixUnitaire
 	 * @param qteStock
 	 */
-	public Article(Integer idArticle, String reference, String marque, String designation, float prixUnitaire,
+	public Article(Integer idArticle, String marque, String reference, String designation, float prixUnitaire,
 			int qteStock) {
 		this.idArticle = idArticle;
-		this.reference = reference;
 		this.marque = marque;
+		this.reference = reference;
 		this.designation = designation;
 		this.prixUnitaire = prixUnitaire;
 		this.qteStock = qteStock;
@@ -38,15 +38,15 @@ public abstract class Article {
 	/**
 	 * Constructeurs avec paramètres (sauf idArticle)
 	 * 
-	 * @param reference
 	 * @param marque
+	 * @param reference
 	 * @param designation
 	 * @param prixUnitaire
 	 * @param qteStock
 	 */
-	public Article(String reference, String marque, String designation, float prixUnitaire, int qteStock) {
-		this.reference = reference;
+	public Article(String marque, String reference, String designation, float prixUnitaire, int qteStock) {
 		this.marque = marque;
+		this.reference = reference;
 		this.designation = designation;
 		this.prixUnitaire = prixUnitaire;
 		this.qteStock = qteStock;
