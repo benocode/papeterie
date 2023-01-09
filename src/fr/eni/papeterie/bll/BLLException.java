@@ -1,13 +1,21 @@
 package fr.eni.papeterie.bll;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BLLException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 
-// Constructeurs	
+	private List<String> erreurs;
 
+// Constructeurs
+
+	/**
+	 * Constructeur sans paramètres qui instancie une liste d'erreurs
+	 */
 	public BLLException() {
-		super();
+		erreurs = new ArrayList<String>();
 	}
 
 	public BLLException(String message) {
@@ -23,5 +31,13 @@ public class BLLException extends Exception {
 	@Override
 	public String getMessage() {
 		return "BLL - " + super.getMessage();
+	}
+
+	public List<String> getErreurs() {
+		return erreurs;
+	}
+
+	public void ajouterErreur(String message) {
+		erreurs.add(message);
 	}
 }

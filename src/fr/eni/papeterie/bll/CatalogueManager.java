@@ -29,14 +29,31 @@ public class CatalogueManager {
 	 * @throws BLLException
 	 */
 	public void validerArticle(Article article) throws BLLException {
-		if (article == null || article.getMarque() == null || article.getMarque().trim().isEmpty()
-				|| article.getReference() == null || article.getReference().trim().isEmpty()
-				|| article.getDesignation() == null || article.getDesignation().trim().isEmpty()
-				|| article.getPrixUnitaire() <= 0f
-				|| (article instanceof Ramette) && ((Ramette) article).getGrammage() <= 0
-				|| (article instanceof Stylo) && ((Stylo) article).getCouleur().trim().isEmpty()
-				|| (article instanceof Stylo) && ((Stylo) article).getCouleur() == null) {
-			throw new BLLException("Erreur - il manque des données ou des données sont erronées");
+		BLLException exception = new BLLException();
+		if (article.getMarque() == null || article.getMarque().trim().isEmpty()) { // .trim().isEmpty = isBlank()
+			exception.ajouterErreur("Un article doit avoir une marque");
+		}
+		if (article.getReference() == null || article.getReference().isBlank()) { // <-- Exemple avec isBlank()
+			exception.ajouterErreur("Un article doit avoir une référence");
+		}
+		if (article.getDesignation() == null || article.getDesignation().isBlank()) {
+			exception.ajouterErreur("Un article doit avoir une désignation");
+		}
+		if (article.getPrixUnitaire() <= 0f) {
+			exception.ajouterErreur("Un article doit avoir prix unitaire supérieur à 0");
+		}
+		if (article instanceof Ramette) {
+			if (((Ramette) article).getGrammage() <= 0) {
+				exception.ajouterErreur("Une ramette doit avoir un grammage supérieur à 0");
+			}
+		}
+		if (article instanceof Stylo) {
+			if (((Stylo) article).getCouleur() == null || ((Stylo) article).getCouleur().isBlank()) {
+				exception.ajouterErreur("Un stylo doit avoir une couleur");
+			}
+		}
+		if (exception.getErreurs().size() > 0) {
+			throw exception;
 		}
 	}
 

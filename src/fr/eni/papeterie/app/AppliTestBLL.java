@@ -14,18 +14,16 @@ public class AppliTestBLL {
 	public static void main(String[] args) {
 		// Instanciation du jeu d'essai
 		List<Article> articles = new ArrayList<>();
-		Stylo stylo = new Stylo("Bic", "BBOrange", "Bic bille Orange", 1.2f, 20, "bleu");
-		articles.add(stylo);
-		articles.add(new Ramette("Clairef", "CRA4S", "Ramette A4 Sup", 9f, 20, 80));
-		articles.add(new Stylo("Stypen", "PlumeS", "Stylo Plume Stypen", 5.5f, 20, "jaune"));
+
+		articles.add(new Stylo("    ", "PlumeS", "Stylo Plume Stypen", 5.5f, 20, "jaune"));
 		articles.add(new Stylo("Waterman", "WOBGreen", "Waterman Orion Bille vert", 4.2f, 35, "vert"));
 		articles.add(new Ramette("ProDesign", "ForLaser", "A4 Special laser", 5.5f, 55, 100));
 
 		CatalogueManager mger = null;
+
 		try {
 			mger = new CatalogueManager();
 		} catch (BLLException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
@@ -37,28 +35,29 @@ public class AppliTestBLL {
 			System.out.println(mger.getCatalogue());
 
 		} catch (BLLException e) {
-			e.printStackTrace();
+			for (String current : e.getErreurs()) {
+				System.err.println(current);
+			}
 		}
 
 		// Modification d'un article
-		try {
-			stylo.setCouleur("noir");
-			stylo.setDesignation("Bic bille noir");
-			stylo.setReference("BBNoir");
-			mger.updateArticle(stylo);
-			System.out.println("Article après modification  : " + stylo.toString());
-		} catch (BLLException e) {
-			e.printStackTrace();
-		}
-
-		// Suppression d'un article
-		try {
-			mger.removeArticle(stylo.getIdArticle());
-			System.out.println(mger.getCatalogue());
-		} catch (BLLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			stylo.setCouleur("noir");
+//			stylo.setDesignation("Bic bille noir");
+//			stylo.setReference("BBNoir");
+//			mger.updateArticle(stylo);
+//			System.out.println("Article après modification  : " + stylo.toString());
+//		} catch (BLLException e) {
+//			System.err.println(e.getErreurs());
+//		}
+//
+//		// Suppression d'un article
+//		try {
+//			mger.removeArticle(stylo.getIdArticle());
+//			System.out.println(mger.getCatalogue());
+//		} catch (BLLException e) {
+//			System.err.println(e.getErreurs());
+//		}
 	}
 
 }
