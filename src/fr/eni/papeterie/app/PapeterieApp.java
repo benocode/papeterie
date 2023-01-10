@@ -2,7 +2,7 @@ package fr.eni.papeterie.app;
 
 import javax.swing.SwingUtilities;
 
-import fr.eni.papeterie.app.swing.EcranArticle;
+import fr.eni.papeterie.app.swing.ArticleController;
 
 public class PapeterieApp {
 
@@ -13,8 +13,7 @@ public class PapeterieApp {
 
 			@Override
 			public void run() {
-				EcranArticle frame = new EcranArticle();
-				frame.setVisible(true);
+				ArticleController.get().startApp();
 			}
 		});
 	}

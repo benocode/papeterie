@@ -3,6 +3,8 @@ package fr.eni.papeterie.app.swing;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -10,9 +12,14 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+
+import fr.eni.papeterie.bo.Article;
+import fr.eni.papeterie.bo.Ramette;
+import fr.eni.papeterie.bo.Stylo;
 
 /**
  * Classe qui modélise l'écran principale de consultation des articles et
@@ -30,15 +37,19 @@ public class EcranArticle extends JFrame {
 	private JTextField txtReference, txtDesignation, txtMarque, txtStock, txtPrix;
 	private JPanel panelType, panelGrammage;
 	private JRadioButton radioRamette, radioStylo;
-	private JCheckBox chk80, chk100;
+	private JCheckBox noChk, chk80, chk100;
 	private JComboBox<String> cboCouleur;
+	private NavBarre navBarre;
+
+	/* Article affiché à l'écran via son idArticle */
+	private Integer idCourant;
 
 	/**
 	 * Constructeur pour paramétrage de la fenêtre principale
 	 */
 	public EcranArticle() {
-		this.setTitle("Papeterie");
-		this.setSize(400, 500);
+		this.setTitle("Article de papeterie");
+		this.setSize(400, 400);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		this.setResizable(false);
@@ -122,6 +133,13 @@ public class EcranArticle extends JFrame {
 
 		gbc.gridx = 1;
 		panel.add(getCboCouleur(), gbc);
+
+		// Ligne 9
+		gbc.gridy = 8;
+		gbc.gridx = 0;
+		gbc.gridwidth = 2;
+		navBarre = getNavBarre();
+		panel.add(navBarre.getPanelBoutons(), gbc);
 
 		// Affecter le panel à l'écran
 		this.setContentPane(panel);
@@ -222,6 +240,18 @@ public class EcranArticle extends JFrame {
 	public JRadioButton getRadioRamette() {
 		if (radioRamette == null) {
 			radioRamette = new JRadioButton("Ramette");
+			radioRamette.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					getChk80().setSelected(true); // coché par défaut à la création
+					getNoChk().setEnabled(false);
+					getChk80().setEnabled(true);
+					getChk100().setEnabled(true);
+					getCboCouleur().setEnabled(false);
+				}
+
+			});
 		}
 		return radioRamette;
 	}
@@ -229,6 +259,18 @@ public class EcranArticle extends JFrame {
 	public JRadioButton getRadioStylo() {
 		if (radioStylo == null) {
 			radioStylo = new JRadioButton("Stylo");
+			radioStylo.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					getNoChk().setSelected(true); // coché par défaut à la création
+					getNoChk().setEnabled(false);
+					getChk80().setEnabled(false);
+					getChk100().setEnabled(false);
+					getCboCouleur().setEnabled(true);
+				}
+				
+			});
 		}
 		return radioStylo;
 	}
@@ -243,14 +285,23 @@ public class EcranArticle extends JFrame {
 	public JPanel getPanelGrammage() {
 		if (panelGrammage == null) {
 			panelGrammage = new JPanel();
-			panelGrammage.setLayout(new BoxLayout(panelGrammage, BoxLayout.Y_AXIS));
+			panelGrammage.setLayout(new BoxLayout(panelGrammage, BoxLayout.X_AXIS));
+			panelGrammage.add(getNoChk());
 			panelGrammage.add(getChk80());
 			panelGrammage.add(getChk100());
 			ButtonGroup bg = new ButtonGroup();
+			bg.add(getNoChk());
 			bg.add(getChk80());
 			bg.add(getChk100());
 		}
 		return panelGrammage;
+	}
+
+	public JCheckBox getNoChk() {
+		if (noChk == null) {
+			noChk = new JCheckBox("Non");
+		}
+		return noChk;
 	}
 
 	public JCheckBox getChk80() {
@@ -281,7 +332,82 @@ public class EcranArticle extends JFrame {
 			cboCouleur.addItem("rouge");
 			cboCouleur.addItem("noir");
 			cboCouleur.addItem("vert");
+			cboCouleur.addItem("jaune");
+			cboCouleur.setSelectedItem(null);
 		}
 		return cboCouleur;
+	}
+
+	public NavBarre getNavBarre() {
+		if (navBarre == null) {
+			navBarre = new NavBarre();
+		}
+		return navBarre;
+	}
+
+	public void afficherNouveau() {
+		// Par défaut un article est une ramette
+		Ramette a = new Ramette(null, "", "", "", 0.0f, 0, 0);
+		idCourant = null;
+		afficherArticle(a);
+	}
+
+	public void afficherArticle(Article a) {
+		idCourant = a.getIdArticle();
+		// Caractéristiques de l'article affichées à l'écran
+		getTxtReference().setText(a.getReference());
+		getTxtMarque().setText(a.getMarque());
+		getTxtDesignation().setText(a.getDesignation());
+		getTxtPrix().setText(String.valueOf(a.getPrixUnitaire()));
+		getTxtStock().setText(String.valueOf(a.getQteStock()));
+
+		if (a instanceof Stylo) {
+			// Sélection du bouton radio correspondant au stylo
+			getRadioStylo().setSelected(true);
+			// Activer le choix des couleurs
+			getCboCouleur().setEnabled(true);
+			// Sélectionner la couleur
+			getCboCouleur().setSelectedItem(((Stylo) a).getCouleur());
+			// Désactiver les cases à cocher du grammage
+			getNoChk().setSelected(true);
+			getNoChk().setEnabled(false);
+			getChk80().setEnabled(false);
+			getChk100().setEnabled(false);
+		} else {
+			/* Cas de la ramette */
+			// Sélection du bouton radio correspondant à ramette
+			getRadioRamette().setSelected(true);
+			// Activer le choix des grammages
+			getChk80().setEnabled(true);
+			getChk100().setEnabled(true);
+			// Sélectionner le grammage
+			getChk80().setSelected(((Ramette) a).getGrammage() == 80);
+			getChk100().setSelected(((Ramette) a).getGrammage() == 100);
+			// Désactiver la liste déroulante de couleur Stylo
+			getCboCouleur().setSelectedItem(null);
+			getCboCouleur().setEnabled(false);
+			getNoChk().setEnabled(false);
+		}
+		// Rend le type modifiable si l'article n'a pas d'id
+		getRadioStylo().setEnabled(a.getIdArticle() == null);
+		getRadioRamette().setEnabled(a.getIdArticle() == null);
+	}
+
+	public Article getArticle() {
+		Article article = null;
+		if (getRadioStylo().isSelected()) {
+			article = new Stylo(idCourant, getTxtMarque().getText(), getTxtReference().getText(),
+					getTxtDesignation().getText(), Float.parseFloat(getTxtPrix().getText()),
+					Integer.parseInt(getTxtStock().getText()), (String) getCboCouleur().getSelectedItem());
+		} else {
+			article = new Ramette(idCourant, getTxtMarque().getText(), getTxtReference().getText(),
+					getTxtDesignation().getText(), Float.parseFloat(getTxtPrix().getText()),
+					Integer.parseInt(getTxtStock().getText()), getChk100().isSelected() ? 100 : 80);
+		}
+		return article;
+	}
+
+	public void infoErreur(String msg) {
+		JOptionPane.showMessageDialog(EcranArticle.this, msg, "", JOptionPane.ERROR_MESSAGE);
 	}
 }

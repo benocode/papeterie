@@ -28,6 +28,7 @@ public class CatalogueManager {
 	 * @param article
 	 * @throws BLLException
 	 */
+	// TODO ajouter une limite en nombre de caractères
 	public void validerArticle(Article article) throws BLLException {
 		BLLException exception = new BLLException();
 		if (article.getMarque() == null || article.getMarque().trim().isEmpty()) { // .trim().isEmpty = isBlank()
@@ -135,12 +136,12 @@ public class CatalogueManager {
 	 * @throws BLLException
 	 * @throws DALException
 	 */
-	public void removeArticle(int idArticle) throws BLLException {
+	public void removeArticle(Article article) throws BLLException {
 		try {
-			daoArticle.delete(idArticle);
+			daoArticle.delete(article.getIdArticle());
 		} catch (DALException e) {
 			e.printStackTrace();
-			throw new BLLException("Echec suppression de l'article n°" + idArticle, e);
+			throw new BLLException("Echec suppression de l'article n°" + article.getIdArticle(), e);
 		}
 	}
 }
