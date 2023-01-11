@@ -39,7 +39,6 @@ public class EcranArticle extends JFrame {
 	private JRadioButton radioRamette, radioStylo;
 	private JCheckBox noChk, chk80, chk100;
 	private JComboBox<String> cboCouleur;
-	private NavBarre navBarre;
 
 	/* Article affiché à l'écran via son idArticle */
 	private Integer idCourant;
@@ -138,10 +137,9 @@ public class EcranArticle extends JFrame {
 		gbc.gridy = 8;
 		gbc.gridx = 0;
 		gbc.gridwidth = 2;
-		navBarre = getNavBarre();
-		panel.add(navBarre.getPanelBoutons(), gbc);
+		panel.add(NavBarre.getNavBarre().getPanelBoutons(), gbc);
 
-		// Affecter le panel à l'écran
+		// Affecte le panel à l'écran
 		this.setContentPane(panel);
 	}
 
@@ -336,13 +334,6 @@ public class EcranArticle extends JFrame {
 			cboCouleur.setSelectedItem(null);
 		}
 		return cboCouleur;
-	}
-
-	public NavBarre getNavBarre() {
-		if (navBarre == null) {
-			navBarre = new NavBarre();
-		}
-		return navBarre;
 	}
 
 	public void afficherNouveau() {

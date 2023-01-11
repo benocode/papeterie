@@ -7,7 +7,7 @@ import fr.eni.papeterie.bll.BLLException;
 import fr.eni.papeterie.bll.CatalogueManager;
 import fr.eni.papeterie.bo.Article;
 
-public class ArticleController {
+public class ArticleController implements NavBarreObserver {
 
 	private static ArticleController instance;
 	private EcranArticle ecrArticle;
@@ -15,7 +15,7 @@ public class ArticleController {
 	private List<Article> catalogue;
 	private int indexCatalogue;
 
-	// Constructeur via Singleton
+	// Constructeur
 	private ArticleController() {
 		try {
 			mger = new CatalogueManager();
@@ -63,6 +63,7 @@ public class ArticleController {
 		}
 	}
 
+	@Override
 	public void precedent() {
 		if (indexCatalogue > 0) {
 			indexCatalogue--;
@@ -70,11 +71,13 @@ public class ArticleController {
 		}
 	}
 
+	@Override
 	public void nouveau() {
 		indexCatalogue = catalogue.size();
 		ecrArticle.afficherNouveau();
 	}
 
+	@Override
 	public void suivant() {
 		if (indexCatalogue < catalogue.size() - 1) {
 			indexCatalogue++;
@@ -82,6 +85,7 @@ public class ArticleController {
 		}
 	}
 
+	@Override
 	public void enregistrer() {
 		Article articleAffiche = ecrArticle.getArticle();
 		try {
@@ -100,6 +104,7 @@ public class ArticleController {
 		}
 	}
 
+	@Override
 	public void supprimer() {
 		try {
 			mger.removeArticle(catalogue.get(indexCatalogue));

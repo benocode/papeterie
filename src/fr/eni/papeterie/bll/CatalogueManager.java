@@ -5,13 +5,13 @@ import java.util.List;
 import fr.eni.papeterie.bo.Article;
 import fr.eni.papeterie.bo.Ramette;
 import fr.eni.papeterie.bo.Stylo;
-import fr.eni.papeterie.dal.ArticleDAO;
 import fr.eni.papeterie.dal.DALException;
+import fr.eni.papeterie.dal.DAO;
 import fr.eni.papeterie.dal.DAOFactory;
 
 public class CatalogueManager {
 
-	private static ArticleDAO daoArticle;
+	private static DAO<Article> daoArticle;
 
 	/**
 	 * Constructeur sans paramètres pour instancier le DAO

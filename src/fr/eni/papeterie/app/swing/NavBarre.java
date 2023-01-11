@@ -24,9 +24,25 @@ public class NavBarre {
 	private JButton btnSupprimer;
 	private JButton btnSuivant;
 	
-//	public NavBarre() {
-//
-//	}
+	private static NavBarre instance;
+
+	/**
+	 * Constructeur privé
+	 */
+	private NavBarre() {
+	}
+
+	/**
+	 * Méthode getter pour créer une instance unique de classe NavBarre
+	 * 
+	 * @category Pattern Singleton
+	 */
+	public static NavBarre getNavBarre() {
+		if (instance == null) {
+			instance = new NavBarre();
+		}
+		return instance;
+	}
 
 	/**
 	 * Méthode pour créer le panel de boutons de navigation
@@ -34,6 +50,7 @@ public class NavBarre {
 	 * @return JPanel panelBoutons
 	 */
 	public JPanel getPanelBoutons() {
+		getNavBarre();
 		if (panelBoutons == null) {
 			panelBoutons = new JPanel();
 			panelBoutons.setLayout(new FlowLayout());

@@ -5,8 +5,8 @@ import java.util.List;
 import fr.eni.papeterie.bo.Article;
 import fr.eni.papeterie.bo.Ramette;
 import fr.eni.papeterie.bo.Stylo;
-import fr.eni.papeterie.dal.ArticleDAO;
 import fr.eni.papeterie.dal.DALException;
+import fr.eni.papeterie.dal.DAO;
 import fr.eni.papeterie.dal.DAOFactory;
 
 public class AppliTestDAL {
@@ -14,7 +14,7 @@ public class AppliTestDAL {
 	public static void main(String[] args) {
 
 		//Déclaration et instanciation de la DAO
-		ArticleDAO articleDAO = DAOFactory.getArticleDAO();
+		DAO<Article> articleDAO = DAOFactory.getArticleDAO();
 
 		// Instanciation du jeu d'essai
 		Article a1 = new Stylo("Bic", "BBOrange", "Bic bille Orange", 1.2f, 20, "bleu");
@@ -65,7 +65,6 @@ public class AppliTestDAL {
 			}
 			System.out.println(sb.toString());
 			System.out.println("---------------------------------------------------------------");
-
 
 		} catch (DALException e) {
 			e.printStackTrace();

@@ -12,8 +12,8 @@ import java.util.List;
 import fr.eni.papeterie.bo.Article;
 import fr.eni.papeterie.bo.Ramette;
 import fr.eni.papeterie.bo.Stylo;
-import fr.eni.papeterie.dal.ArticleDAO;
 import fr.eni.papeterie.dal.DALException;
+import fr.eni.papeterie.dal.DAO;
 
 /**
  * Classe abstraite pour effectuer les requêtes SQL avec le SGBD
@@ -21,7 +21,7 @@ import fr.eni.papeterie.dal.DALException;
  * @author benocode
  * @date 04/01/2023
  */
-public class ArticleDAOJdbcImpl implements ArticleDAO {
+public class ArticleDAOJdbcImpl implements DAO<Article> {
 
 	private static final String TYPE_STYLO = "STYLO";
 	private static final String TYPE_RAMETTE = "RAMETTE";
@@ -54,7 +54,7 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 			query = conn.prepareStatement(SQL_SELECT_BY_ID);
 			query.setInt(1, id);
 			result = query.executeQuery();
-			
+
 			/*
 			 * Traitement du résultat
 			 */
