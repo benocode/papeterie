@@ -8,9 +8,14 @@ import fr.eni.papeterie.dal.jdbc.ArticleDAOJdbcImpl;
  * @author benocode
  * @date 06/01/2023
  */
-public class DAOFactory {
+public abstract class DAOFactory {
+
+	private static ArticleDAO articleDAO;
 
 	public static ArticleDAO getArticleDAO() {
-		return new ArticleDAOJdbcImpl();
+		if (articleDAO == null) {
+			articleDAO = new ArticleDAOJdbcImpl();
+		}
+		return articleDAO;
 	}
 }

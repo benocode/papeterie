@@ -41,7 +41,7 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 	 */
 	@Override
 	public Article selectById(int id) throws DALException {
-		Connection conn = null;
+		Connection conn;
 		PreparedStatement query = null;
 		ResultSet result;
 		Article article = null;
@@ -95,7 +95,7 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 	 */
 	@Override
 	public List<Article> selectAll() throws DALException {
-		Connection conn = null;
+		Connection conn;
 		Statement query = null;
 		ResultSet result = null;
 		List<Article> articles = new ArrayList<>();
@@ -147,7 +147,7 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 	 */
 	@Override
 	public void update(Article article) throws DALException {
-		Connection conn = null;
+		Connection conn;
 		PreparedStatement query = null;
 
 		try {

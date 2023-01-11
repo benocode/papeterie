@@ -12,7 +12,7 @@ import fr.eni.papeterie.dal.Settings;
  * @author benocode
  * @date 06/01/2023
  */
-public class JdbcTools {
+public abstract class JdbcTools {
 
 	private static Connection connection;
 
@@ -22,12 +22,18 @@ public class JdbcTools {
 	 * @return connection
 	 * @throws SQLException
 	 */
-	public static Connection getConnection() throws SQLException {
-		if (connection == null) {
-			String url = Settings.getProperties("url");
-			String user = Settings.getProperties("user");
-			String password = Settings.getProperties("password");
-			connection = DriverManager.getConnection(url, user, password);
+	public static Connection getConnection() {
+		try {
+			if (connection == null || connection.isClosed()) {
+				String url = Settings.getProperties("url");
+				String user = Settings.getProperties("user");
+				String password = Settings.getProperties("password");
+				connection = DriverManager.getConnection(url, user, password);
+				System.out.println("--- Connection to database open ---");
+			}
+		} catch (SQLException e) {
+			System.err.println("*** Error trying to open connection to database ***");
+			e.printStackTrace();
 		}
 		return connection;
 	}
@@ -36,14 +42,14 @@ public class JdbcTools {
 	 * Méthode pour fermer la connexion avec le SGBD
 	 */
 	public static void closeConnection() {
-		if (connection != null) {
-			try {
+		try {
+			if (connection != null && !connection.isClosed()) {
 				connection.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				connection = null;
+				System.out.println("--- Connection to database closed ---");
 			}
+		} catch (SQLException e) {
+			System.err.println("*** Error trying to close connection to database ***");
+			e.printStackTrace();
 		}
 	}
 }
