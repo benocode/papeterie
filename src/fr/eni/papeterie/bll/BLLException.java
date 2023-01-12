@@ -1,6 +1,7 @@
 package fr.eni.papeterie.bll;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class BLLException extends Exception {
@@ -28,9 +29,13 @@ public class BLLException extends Exception {
 
 // Méthodes
 
+	/**
+	 * Retourne toutes les erreurs de la liste sous la forme d'une chaîne de
+	 * caractères
+	 */
 	@Override
 	public String getMessage() {
-		return "BLL - " + super.getMessage();
+		return Arrays.toString(erreurs.toArray());
 	}
 
 	public List<String> getErreurs() {
